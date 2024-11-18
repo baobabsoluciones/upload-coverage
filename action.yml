@@ -16,7 +16,7 @@ inputs:
     required: true
   coverage-path:
     description: 'Path to coverage report'
-    required: true
+    required: false
     default: 'coverage.xml'
 
 runs:
