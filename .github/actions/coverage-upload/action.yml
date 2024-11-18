@@ -1,0 +1,56 @@
+name: 'Coverage Upload Action'
+description: 'Prepare and upload coverage reports to GCS'
+inputs:
+  python-version:
+    description: 'Python version to run on'
+    required: false
+    default: '3.10'
+  gcp-project-id:
+    description: 'GCP Project ID'
+    required: true
+  gcp-credentials:
+    description: 'GCP Credentials JSON'
+    required: true
+  gcp-coverage-bucket:
+    description: 'GCS Bucket for coverage reports'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Get current timestamp
+      if: inputs.python-version == matrix.python-version
+      id: timestamp
+      shell: bash
+      run: echo "timestamp=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
+
+    - name: Get repository name
+      if: inputs.python-version == matrix.python-version
+      id: repo-name
+      shell: bash
+      run: echo "repo_name=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
+
+    - name: Get branch name
+      if: inputs.python-version == matrix.python-version
+      id: branch-name
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+        else
+          echo "branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Upload to GCE bucket - authenticate
+      if: inputs.python-version == matrix.python-version
+      uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: ${{ inputs.gcp-project-id }}
+        credentials_json: ${{ inputs.gcp-credentials }}
+
+    - name: Upload to GCE bucket - upload coverage reports
+      if: inputs.python-version == matrix.python-version
+      uses: 'google-github-actions/upload-cloud-storage@v2'
+      with:
+        path: 'coverage.xml'
+        destination: '${{ inputs.gcp-coverage-bucket }}/${{ steps.repo-name.outputs.repo_name }}/${{ steps.branch-name.outputs.branch }}/${{ steps.timestamp.outputs.timestamp }}'
