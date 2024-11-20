@@ -6,7 +6,7 @@ A GitHub Action to upload code coverage reports to Google Cloud Storage (GCS).
 
 This action helps you automate the process of uploading code coverage reports to a Google Cloud Storage bucket. It's particularly useful for maintaining a history of coverage reports across different branches and commits.
 
-The coverage report is uploaded to a bucket set up on `gcp_coverage_bucket` and then the folder structure will be `{branch_name}/{timestamp}` and the idea is to upload the coverage.xml.
+The coverage report is uploaded to a bucket set up on `gcp_coverage_bucket` and then the folder structure will be `{repo_name}/{branch_name}/{timestamp}` and the idea is to upload the coverage.xml.
 
 This action is used as a previous step to the action (missing link here).
 
