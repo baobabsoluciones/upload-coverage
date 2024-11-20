@@ -1,4 +1,4 @@
-name: 'Coverage Upload Action'
+name: 'Coverage Upload to GCS'
 description: 'Prepare and upload coverage reports to GCS'
 author: 'baobab soluciones'
 inputs:
