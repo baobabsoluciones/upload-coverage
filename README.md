@@ -49,7 +49,7 @@ jobs:
           coverage xml
           
       - name: Upload coverage
-        uses: baobabsoluciones/upload-coverage@v1
+        uses: baobabsoluciones/upload-coverage@v0.0.6
         with:
           python-version: ${{ matrix.python-version }}
           gcp-project-id: ${{ secrets.GCP_PROJECT_ID }}
